@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.persistence.boardmapper">
+	<select id="getNow">
+		select sysdate from dual
+	</select>
+	<insert id="insert">
+		INSERT into tbl_board(bno, title, content, writer)
+		values(seq_bno.nextval, #{title}, #{content}, #{writer})
+	</insert>
+
+	<select id="selectOne" resultType="org.zerock.domain.BoardVO">
+		select * from tbl_board where bno = #{bno}
+	</select>
+
+	<select id="List" resultType="org.zerock.domain.BoardVO">
+		select * from tbl_board
+	</select>
+
+	<update id="update">
+		update tbl_board set title=#{title}, content = #{content}, writer =#{writer}
+		where bno=#{bno}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_board where bno = #{bno}
+	</delete>
+	
+	<select id="listpage" resultType="org.zerock.domain.BoardVO">
+	 <![CDATA[
+	 select * from
+  (select /*INDEX_DESDC(tbl_board pk_bno)*/rownum rn , bno, title,writer,regdate
+    from tbl_board where bno>0 and rownum <= #{realpage}*10)
+  where rn > (#{realpage}-1)*10]]>
+	</select>
+	
+		<select id="listCriteria" resultType="org.zerock.domain.BoardVO">
+	 <![CDATA[
+	 select * from
+  (select /*INDEX_DESDC(tbl_board pk_bno)*/rownum rn , bno, title,writer,regdate
+    from tbl_board where bno>0 and rownum <= #{page}*#{perPageNum} order by bno desc)
+  where rn > #{pageStart}]]>
+	</select>
+	
+			<select id="countPaging" resultType="int">
+	 <![CDATA[
+	 select count(bno) from tbl_board where bno >0 ]]>
+	</select>
+	
+	<insert id="addAttach">
+    insert into TBL_ATTACH(fullName, bno) values(#{fullName},seq_bno.currval)
+	</insert>
+	
+	<select id="getAttach">
+		select fullname from tbl_attach where bno = #{bno} order by regdate
+	</select>
+
+
+</mapper>
