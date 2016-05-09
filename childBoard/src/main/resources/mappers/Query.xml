@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="org.zerock.persistence.mapper">
+    <select id="getNow">
+		select sysdate from dual
+	</select>
+	
+	<insert id="insert">
+		insert into tbl_childboard(cno, userid,cname,clevel,imgpath,age,school,deep)values(seq_child.nextval, #{userid},#{cname},#{clevel},#{imgpath},#{age},#{school},#{deep})
+	</insert>
+    
+  	<delete id="delete">
+  		delete from tbl_childboard where cno =#{cno}
+  	</delete>
+  	
+  	<update id="update">
+  		update tbl_childboard set cname=#{cname},clevel=#{clevel},age=#{age},school=#{school},deep=#{deep}, imgpath=#{imgpath} where userid=#{userid}	
+  	</update>
+    
+    <select id="readAll" resultType="org.zerock.domain.ChildVO">
+    	select * from tbl_childboard
+    </select>
+    
+    <select id="read" resultType="org.zerock.domain.ChildVO">
+    	select * from tbl_childboard where cno=#{cno}
+    </select>
+    
+    </mapper>
